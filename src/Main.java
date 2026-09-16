@@ -1,29 +1,34 @@
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
 
-public class main {
-    public static void app(String[] args) {
+public class Main {
+    public static void main(String[] args) {
         System.out.println("\n--- Workshop Manager ---");
         System.out.println("Developed and maintained by: LJ 'swelor' Matsoane");
         System.out.println("Date: " + java.time.LocalDate.now());
 
-        // --- Login ---
-        userManager userManager = new userManager();
-        userManager.login();
+        // login logic
+        UserManager userManager = new UserManager();
+        boolean loggedIn = userManager.login();
 
-        // --- Welcome (after login) ---
-        String userName = "guest"; // replace with logged-in user
+        if (!loggedIn) {
+            System.out.println("Exiting application...");
+            return;
+        }
+
+        // welcome message for after the login per user
+        UserManager currentUser = userManager.getLoggedInUser();
+        String username = currentUser != null ? currentUser.getUsername() : "guest";
+
         String[] welcomeMessages = {
-            "Life is a sandwich, no matter how it flips the bread comes first. Let's get this bread, {userName}!",
-            "Real Gs move in silence like lasagna. You're a G, {userName}!",
+            "Life is a sandwich, no matter how it flips the bread comes first. Let's get this bread, " + username + "!",
+            "Real Gs move in silence like lasagna. You're a G, " + username + "!",
             "It may not be today, tomorrow, next week, or next month. One day, you will be a champion.",
-            "Well well well, back to bring more heat, {userName}?"
+            "Well well well, back to bring more heat, " + username + "?"
         };
         int randomIndex = (int) (Math.random() * welcomeMessages.length);
-        System.out.println(welcomeMessages[randomIndex].replace("{userName}", userName));
+        System.out.println(welcomeMessages[randomIndex]);
 
-        // --- Main menu ---
+        // main menu
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -40,12 +45,13 @@ public class main {
             System.out.println("9. Exit");
 
             System.out.print("Select an option: ");
-            int choice = scanner.nextInt();
+            int choice = scanner.nextLine();
             scanner.nextLine(); // consume leftover newline
 
             switch (choice) {
                 case 9:
                     running = false;
+                    System.out.println("Goodbye!");
                     break;
                 default:
                     System.out.println("Option " + choice + " not implemented yet.");
